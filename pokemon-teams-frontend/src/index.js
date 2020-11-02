@@ -11,8 +11,6 @@ window.addEventListener('DOMContentLoaded', (event) => {
         .then(data => {
             data.forEach(e => {
               createCard(e.name, e.id, e.pokemons)
-              // console.log(e.id)
-              //   console.log(e.pokemons[0].species)
             });
           }
         )
@@ -39,12 +37,32 @@ window.addEventListener('DOMContentLoaded', (event) => {
       deletePokemon(event)
 
     } else if (event.target.className === "add") {
-      console.log("add pokemon to trainer")
+        addPokemon(event)
+        // console.log(event.target.parentElement.querySelector('p'))
     }
   })
 
+  function addPokemon(event) {
+
+    fetch(`${POKEMONS_URL}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+          "trainer_id": parseInt(event.target.dataset.trainerId, 10)
+        }),
+    })
+    .then(response => response.json())
+    .then(newPokemonObj => {
+      createCard(event.target.parentElement.querySelector('p').innerText, newPokemonObj.trainer_id, [newPokemonObj]);
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+    });
+  }
+
   function deletePokemon(event){
-    const data = { username: 'example' };
 
     fetch(`${POKEMONS_URL}/${event.target.dataset.pokemonid}`, {
       method: 'DELETE',
@@ -52,7 +70,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
         'Content-Type': 'application/json',
       },
     })
-    event.target.reset()
+    .then(console.log(event.target))
     .catch((error) => {
       console.error('Error:', error);
     });
@@ -61,36 +79,5 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
 });
 
-// pseudocode
 
-// When a user loads the page, they should see all trainers, with their current team of Pokemon.
-
-// fetchTrainers()
-// iterate through trainers - forEach
-    // iterate through pokemon forEach trainer
-
-
-// Suggested HTML
-// A Pokemon Card can be placed within the <main> tags.
-
-// Pokemon Trainer Card
-//  <div class="card" data-id="1"><p>Prince</p>
-//   <button data-trainer-id="1">Add Pokemon</button>
-//   <ul>
-//     <li>Jacey (Kakuna) <button class="release" data-pokemon-id="140">Release</button></li>
-//     <li>Zachariah (Ditto) <button class="release" data-pokemon-id="141">Release</button></li>
-//     <li>Mittie (Farfetch'd) <button class="release" data-pokemon-id="149">Release</button></li>
-//     <li>Rosetta (Eevee) <button class="release" data-pokemon-id="150">Release</button></li>
-//     <li>Rod (Beedrill) <button class="release" data-pokemon-id="151">Release</button></li>
-//   </ul>
-// </div>
-
-
-
-
-
-
-
-
-// Whenever a user hits Add Pokemon and they have space on their team, they should get a new Pokemon.
-// Whenever a user hits Release Pokemon on a specific Pokemon team, that specific Pokemon should be released from the team.
+// find li and do li.remove()
