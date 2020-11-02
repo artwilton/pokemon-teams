@@ -3,6 +3,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
     const BASE_URL = "http://localhost:3000"
     const TRAINERS_URL = `${BASE_URL}/trainers`
     const POKEMONS_URL = `${BASE_URL}/pokemons`
+    const pokemonContainer = document.querySelector('main')
     
     fetchTrainers(TRAINERS_URL)
 
@@ -36,10 +37,7 @@ function createCard(trainerName, trainerId) {
     `
 
     console.log(cardDiv)
-}
-
-function renderCard(trainer) {
-
+    pokemonContainer.append(cardDiv)
 }
 
 
